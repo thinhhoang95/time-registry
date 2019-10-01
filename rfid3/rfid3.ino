@@ -22,9 +22,12 @@ byte nuidPICC[4];
 // Card ID in string
 String cardId = "";
 
+int LED_BUILT = 2;
+
 void setup() 
 {
   Serial.begin(9600);
+  pinMode(LED_BUILT, OUTPUT);
   delay(4000);
   WiFi.begin(ssid, password); 
   while (WiFi.status() != WL_CONNECTED) { //Check for the connection
@@ -99,6 +102,17 @@ void loop()
    
       Serial.println(httpResponseCode);   //Print return code
       Serial.println(response);           //Print request answer
+
+      if(response.equals("OK"))
+      {
+        for (int q=1;q<6;q++)
+        {
+          digitalWrite(LED_BUILT, HIGH);
+          delay(300);
+          digitalWrite(LED_BUILT, LOW);
+          delay(300);
+        }
+      }
    
      }else{
    
@@ -114,6 +128,8 @@ void loop()
       Serial.println("Error in WiFi connection");   
    
    }
+   Serial.println("Delay in 2s...");
+   delay(2000);
  
 //instructs the PICC when in the ACTIVE state to go to a "STOP" state
   mfrc522.PICC_HaltA(); 
