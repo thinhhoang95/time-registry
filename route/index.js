@@ -15,7 +15,7 @@ router.post('/registry', async (req, res) => {
     });
     await registry.save();
     let report = await queryReport();
-    await mailer(cardId, report);
+    // await mailer(cardId, report);
     res.status(200).send("OK");
 });
 
