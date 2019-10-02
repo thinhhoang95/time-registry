@@ -82,6 +82,8 @@ router.get('/report', async (req, res) => {
     }
   ];
   let registries = await Registry.aggregate(aggregateRules);
+  let report = await queryReport();
+  await mailer(report);
   res.status(200).json(registries);
 })
 
@@ -166,10 +168,7 @@ let queryReport = async() => {
     return returnStr;
 }
 
-const mailer = async (cardId, report) => {
-    let sj = await Subject.findOne({cardId: cardId});
-    let subject = sj.subjectName;
-    let description = sj.description;
+const mailer = async (report) => {
     let transport = nodemailer.createTransport({
         host: 'smtp.office365.com',
         port: 587,
@@ -182,7 +181,7 @@ const mailer = async (cardId, report) => {
         from: 'thinhhoangdinh95@hotmail.com', // Sender address
         to: 'hoangdinhthinh@live.com',         // List of recipients
         subject: 'New task event registered', // Subject line
-        text: 'Hello Thinh. \n A new task has been registered with the following information: \n Card ID: ' + cardId + ' \n Subject: ' + subject + '\n Description: ' + description + '\n' + report // Plain text body
+        text: 'Hello Thinh. \n Here is the summary of your day:' + '\n' + report // Plain text body
     };
     transport.sendMail(message, function (err, info) {
         if (err) {
