@@ -69,6 +69,9 @@ router.get('/report', async (req, res) => {
         }, 
         'time': {
           '$push': '$date'
+        },
+        'countTime': {
+          $sum: 1
         }
       }
     }
