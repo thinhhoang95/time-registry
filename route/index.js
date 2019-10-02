@@ -69,6 +69,12 @@ router.get('/report', async (req, res) => {
         'subjectName': {
           '$first': '$subject.subjectName'
         },
+        'description': {
+          '$first': '$subject.description'
+        },
+        'time': {
+          $push: '$date'
+        },
         'countTime': {
           $sum: 1
         }
