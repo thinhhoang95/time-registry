@@ -19,6 +19,64 @@ router.post('/registry', async (req, res) => {
     res.status(200).send("OK");
 });
 
+router.get('/report', async (req, res) => {
+  let returnStr = '';
+    let fromDate = new Date();
+    fromDate.setHours(0);
+    fromDate.setMinutes(0);
+    fromDate.setMilliseconds(0);
+    let toDate = new Date();
+    toDate.setHours(0);
+    toDate.setMinutes(0);
+    toDate.setMilliseconds(0);
+    toDate.setDate(toDate.getDate() + 1);
+    
+  let aggregateRules = [
+    {
+      '$match': {
+        'date': { '$gte': fromDate, '$lte': toDate }
+      }
+    }, {
+      '$lookup': {
+        'from': 'subjects', 
+        'localField': 'cardId', 
+        'foreignField': 'cardId', 
+        'as': 'subject'
+      }
+    }, {
+      '$project': {
+        '_id': '$_id', 
+        'cardId': '$cardId', 
+        'date': '$date', 
+        'subject': {
+          '$arrayElemAt': [
+            '$subject', 0
+          ]
+        }
+      }
+    }, {
+      '$sort': {
+        'date': 1
+      }
+    }, {
+      '$group': {
+        '_id': '$cardId', 
+        'subjectName': {
+          '$first': '$subject.subjectName'
+        }, 
+        'description': {
+          '$first': '$subject.description'
+        }, 
+        'time': {
+          '$push': '$date'
+        }
+      }
+    }
+  ];
+  let registries = await Registry.aggregate(aggregateRules);
+  res.status(200).json(registries);
+})
+
 let queryReport = async() => {
     let returnStr = '';
     let fromDate = new Date();
@@ -31,52 +89,47 @@ let queryReport = async() => {
     toDate.setMilliseconds(0);
     toDate.setDate(toDate.getDate() + 1);
     let aggregateRules = [
-        {
-          '$match': {
-            'date': {
-              '$gte': fromDate
-            }, 
-            'date': {
-              '$lte': toDate
-            }
-          }
-        }, {
-          '$lookup': {
-            'from': 'subjects', 
-            'localField': 'cardId', 
-            'foreignField': 'cardId', 
-            'as': 'subject'
-          }
-        }, {
-          '$project': {
-            '_id': '$_id', 
-            'cardId': '$cardId', 
-            'date': '$date', 
-            'subject': {
-              '$arrayElemAt': [
-                '$subject', 0
-              ]
-            }
-          }
-        }, {
-          '$sort': {
-            'date': 1
-          }
-        }, {
-          '$group': {
-            '_id': '$cardId', 
-            'subjectName': {
-              '$first': '$subject.subjectName'
-            }, 
-            'description': {
-              '$first': '$subject.description'
-            }, 
-            'time': {
-              '$push': '$date'
-            }
+      {
+        '$match': {
+          'date': { '$gte': fromDate, '$lte': toDate }
+        }
+      }, {
+        '$lookup': {
+          'from': 'subjects', 
+          'localField': 'cardId', 
+          'foreignField': 'cardId', 
+          'as': 'subject'
+        }
+      }, {
+        '$project': {
+          '_id': '$_id', 
+          'cardId': '$cardId', 
+          'date': '$date', 
+          'subject': {
+            '$arrayElemAt': [
+              '$subject', 0
+            ]
           }
         }
-      ];
+      }, {
+        '$sort': {
+          'date': 1
+        }
+      }, {
+        '$group': {
+          '_id': '$cardId', 
+          'subjectName': {
+            '$first': '$subject.subjectName'
+          }, 
+          'description': {
+            '$first': '$subject.description'
+          }, 
+          'time': {
+            '$push': '$date'
+          }
+        }
+      }
+    ];
     let registries = await Registry.aggregate(aggregateRules);
     registries.forEach((registry) => {
         returnStr += '-----\n';
