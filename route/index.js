@@ -19,6 +19,11 @@ router.post('/registry', async (req, res) => {
     res.status(200).send("OK");
 });
 
+router.get('/report2', async (req, res) => {
+    let report = await queryReport();
+    res.status(200).send(report);
+});
+
 router.get('/report', async (req, res) => {
   let returnStr = '';
     let fromDate = new Date();
