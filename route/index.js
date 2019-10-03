@@ -93,6 +93,7 @@ let queryReport = async() => {
     fromDate.setHours(0);
     fromDate.setMinutes(0);
     fromDate.setMilliseconds(0);
+    fromDate.setHours(fromDate.getHours() - 7);
     let toDate = new Date();
     toDate.setHours(0);
     toDate.setMinutes(0);
