@@ -27,13 +27,10 @@ router.get('/report2', async (req, res) => {
 router.get('/report', async (req, res) => {
   let returnStr = '';
     let fromDate = new Date();
-    fromDate.setHours(0);
+    fromDate.setUTCHours(0);
     fromDate.setMinutes(0);
     fromDate.setMilliseconds(0);
-    let toDate = new Date();
-    toDate.setHours(0);
-    toDate.setMinutes(0);
-    toDate.setMilliseconds(0);
+    let toDate = new Date(fromDate);
     toDate.setDate(toDate.getDate() + 1);
     
   let aggregateRules = [
@@ -90,14 +87,11 @@ router.get('/report', async (req, res) => {
 let queryReport = async() => {
     let returnStr = '';
     let fromDate = new Date();
-    fromDate.setHours(0);
+    fromDate.setUTCHours(0);
     fromDate.setMinutes(0);
     fromDate.setMilliseconds(0);
-    fromDate.setHours(fromDate.getHours() - 7);
     let toDate = new Date(fromDate);
     toDate.setDate(toDate.getDate() + 1);
-    console.log(fromDate);
-    console.log(toDate);
     let aggregateRules = [
       {
         '$match': {
