@@ -98,6 +98,8 @@ let queryReport = async() => {
     toDate.setMinutes(0);
     toDate.setMilliseconds(0);
     toDate.setDate(toDate.getDate() + 1);
+    console.log(fromDate);
+    console.log(toDate);
     let aggregateRules = [
       {
         '$match': {
