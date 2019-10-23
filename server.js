@@ -13,6 +13,6 @@ app.use(urlencodedParser);
 
 app.use(defaultRoute);
 
-app.listen(80, () => {
+app.listen(process.env.PORT || 80, () => {
     console.log('Time Registry is currently running on port 80');
 });
