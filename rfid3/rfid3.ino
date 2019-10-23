@@ -92,7 +92,7 @@ void loop()
     if(WiFi.status()== WL_CONNECTED)
     {
      HTTPClient http;
-     http.begin("http://103.7.41.173:3002/registry");  //Specify destination for HTTP request
+     http.begin("http://work-registry.herokuapp.com/registry");  //Specify destination for HTTP request
      http.addHeader("Content-Type", "text/plain");
      int httpResponseCode = http.POST(str);   //Send the actual POST request
  
