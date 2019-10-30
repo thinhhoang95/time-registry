@@ -2,6 +2,8 @@ import express from 'express';
 import Subject from '../model/subject';
 import Registry from '../model/registry';
 import nodemailer from 'nodemailer';
+import path from 'path';
+import signal from './signal';
 
 let router = express.Router();
 
@@ -16,6 +18,7 @@ router.post('/registry', async (req, res) => {
     await registry.save();
     let report = await queryReport();
     // await mailer(cardId, report);
+    signal(report);
     res.status(200).send("OK");
 });
 
@@ -27,6 +30,11 @@ router.get('/report2', async (req, res) => {
 router.get('/report3', async (req, res) => {
   let report = await queryReport('<br/>');
   res.status(200).send(report);
+});
+
+// viewed at http://localhost:8080
+router.get('/subscribe', function (req, res) {
+  res.sendFile(path.join(__dirname + '/route/subscribe.html'));
 });
 
 router.get('/report', async (req, res) => {
