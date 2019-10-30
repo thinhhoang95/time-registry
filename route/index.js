@@ -34,7 +34,7 @@ router.get('/report3', async (req, res) => {
 
 // viewed at http://localhost:8080
 router.get('/subscribe', function (req, res) {
-  res.sendFile(path.join(__dirname + '/route/subscribe.html'));
+  res.sendFile(path.join(__dirname + '/subscribe.html'));
 });
 
 router.get('/report', async (req, res) => {
