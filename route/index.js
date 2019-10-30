@@ -18,7 +18,7 @@ router.post('/registry', async (req, res) => {
     await registry.save();
     let report = await queryReport();
     // await mailer(cardId, report);
-    signal(report);
+    signal('New card scanned: ' + cardId);
     res.status(200).send("OK");
 });
 
