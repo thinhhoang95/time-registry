@@ -11,7 +11,8 @@ const signal = (content) => {
     var firstNotification = new OneSignal.Notification({
         contents: {
             en: content,
-        }
+        },
+        included_segments: ["All"]
     });   
 
     myClient.sendNotification(firstNotification, function (err, httpResponse, data) {
