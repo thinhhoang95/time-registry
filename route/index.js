@@ -24,6 +24,11 @@ router.get('/report2', async (req, res) => {
     res.status(200).send(report);
 });
 
+router.get('/report3', async (req, res) => {
+  let report = await queryReport('<br/>');
+  res.status(200).send(report);
+});
+
 router.get('/report', async (req, res) => {
   let returnStr = '';
     let fromDate = new Date();
@@ -84,7 +89,8 @@ router.get('/report', async (req, res) => {
   res.status(200).json(registries);
 })
 
-let queryReport = async() => {
+let queryReport = async(rowDelim) => {
+    if (!rowDelim) rowDelim = '\n';
     let returnStr = '';
     let fromDate = new Date();
     fromDate.setUTCHours(0);
@@ -137,8 +143,8 @@ let queryReport = async() => {
     let registries = await Registry.aggregate(aggregateRules);
     registries.forEach((registry) => {
         returnStr += '-----\n';
-        returnStr += 'SUBJECT: ' + registry.subjectName + '\n';
-        returnStr += 'DESCRIPTION: ' + registry.description + '\n';
+        returnStr += 'SUBJECT: ' + registry.subjectName + rowDelim;
+        // returnStr += 'DESCRIPTION: ' + registry.description + rowDelim;
         let timeEntries = registry.time;
         let ongoing = false;
         let prevTime;
@@ -156,8 +162,8 @@ let queryReport = async() => {
         });
         console.log(timeAccumulated);
         minutesAccumulated = Math.ceil(timeAccumulated / (1000 * 60));
-        returnStr += "ACCUMULATED: " + Number(minutesAccumulated).toFixed(2) + " minutes. \n";
-        returnStr += "STATUS: " + (ongoing?"Yes":"No") + "\n";
+        returnStr += "ACCUMULATED: " + Number(minutesAccumulated).toFixed(2) + " minutes." + rowDelim;
+        returnStr += "STATUS: " + (ongoing ? "Yes" : "No") + rowDelim;
     });
     return returnStr;
 }
